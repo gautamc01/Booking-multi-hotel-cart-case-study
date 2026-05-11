@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Booking.com Multi-Hotel Cart — Live Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #003580;
+    --blue: #0071c2;
+    --yellow: #feba02;
+    --green: #008009;
+    --red: #c62828;
+    --bg: #f4f6f9;
+    --white: #ffffff;
+    --text: #1a1a2e;
+    --text-sec: #6b6b6b;
+    --border: #e2e6ed;
+    --blue-wash: #ebf3ff;
+    --yellow-wash: #fff8e1;
+    --green-wash: #e8f5e9;
+    --genius: #004cb8;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(0,53,128,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── TOP HEADER ── */
+  .demo-header {
+    background: linear-gradient(135deg, var(--navy) 0%, #00254d 100%);
+    padding: 0 0 0 0;
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  }
+  .demo-header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 32px;
+  }
+  .demo-brand { display: flex; align-items: center; gap: 12px; }
+  .demo-brand-logo { font-weight: 800; font-size: 20px; color: var(--white); }
+  .demo-brand-pill {
+    background: rgba(254,186,2,0.2); border: 1px solid rgba(254,186,2,0.4);
+    color: var(--yellow); font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;
+  }
+  .demo-header-right { font-size: 13px; color: rgba(255,255,255,0.55); }
+
+  /* ── STEP TABS ── */
+  .step-tabs {
+    display: flex; padding: 0 32px; gap: 0; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .step-tabs::-webkit-scrollbar { display: none; }
+  .step-tab {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 20px; cursor: pointer; border: none;
+    background: none; color: rgba(255,255,255,0.5);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    border-bottom: 3px solid transparent; white-space: nowrap;
+    transition: all 0.2s; position: relative;
+  }
+  .step-tab:hover { color: rgba(255,255,255,0.8); }
+  .step-tab.active { color: var(--white); font-weight: 700; border-bottom-color: var(--yellow); }
+  .step-tab.done { color: rgba(255,255,255,0.7); }
+  .step-tab .tab-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800;
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5);
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .step-tab.active .tab-num { background: var(--yellow); color: var(--navy); }
+  .step-tab.done .tab-num { background: var(--green); color: var(--white); }
+  .tab-arrow {
+    color: rgba(255,255,255,0.2); font-size: 12px; padding: 0 4px;
+    align-self: center;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .demo-body { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* ── PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── SCREEN WRAPPER ── */
+  .screen-wrap {
+    background: var(--white); border-radius: var(--radius);
+    border: 1px solid var(--border); overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  /* ── BROWSER CHROME ── */
+  .browser-bar {
+    background: #f0f0f0; padding: 8px 14px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  .browser-dots { display: flex; gap: 5px; }
+  .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .browser-url {
+    flex: 1; background: var(--white); border: 1px solid #ddd;
+    border-radius: 4px; padding: 4px 10px; font-size: 11px;
+    color: #666; font-family: monospace;
+  }
+
+  /* ── BOOKING NAV ── */
+  .bk-nav {
+    background: var(--navy); padding: 10px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .bk-logo { color: var(--white); font-weight: 800; font-size: 19px; letter-spacing: -0.3px; }
+  .bk-nav-right { display: flex; align-items: center; gap: 16px; }
+  .bk-nav-link { color: rgba(255,255,255,0.7); font-size: 12px; cursor: pointer; }
+  .bk-cart-btn {
+    position: relative; background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 6px;
+    padding: 6px 14px; color: var(--white); font-size: 13px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .bk-cart-btn:hover { background: rgba(255,255,255,0.25); }
+  .cart-count-badge {
+    background: var(--yellow); color: var(--navy);
+    font-size: 10px; font-weight: 800; border-radius: 50%;
+    width: 18px; height: 18px; display: flex; align-items: center;
+    justify-content: center; position: absolute; top: -7px; right: -8px;
+    display: none;
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  }
+  .cart-count-badge.pop { transform: scale(1.6); }
+
+  /* ── SEARCH BAR ── */
+  .bk-search-bar {
+    background: var(--yellow); padding: 10px 24px;
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .bk-search-field {
+    background: var(--white); border: none; border-radius: 4px;
+    padding: 9px 12px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+    color: var(--text); flex: 1; min-width: 120px;
+  }
+  .bk-search-btn {
+    background: var(--blue); color: var(--white); border: none;
+    border-radius: 4px; padding: 9px 20px; font-weight: 700;
+    font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer;
+  }
+
+  /* ── CART BANNER ── */
+  .bk-cart-banner {
+    background: var(--green-wash); border-bottom: 1px solid #a5d6a7;
+    padding: 9px 24px; display: flex; justify-content: space-between;
+    align-items: center;
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
+  }
+  .bk-cart-banner.show { max-height: 50px; opacity: 1; }
+  .banner-text { font-size: 13px; font-weight: 600; color: var(--green); }
+  .banner-link { font-size: 13px; font-weight: 700; color: var(--blue); cursor: pointer; }
+  .banner-link:hover { text-decoration: underline; }
+
+  /* ── RESULTS ── */
+  .bk-results { padding: 16px 24px; }
+  .results-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+  }
+  .results-count { font-size: 14px; font-weight: 600; }
+  .results-sort { font-size: 12px; color: var(--blue); cursor: pointer; }
+
+  .hotel-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+
+  .hotel-card {
+    border-radius: 10px; border: 1.5px solid var(--border);
+    overflow: hidden; background: var(--white);
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    cursor: default;
+  }
+  .hotel-card:hover { box-shadow: 0 4px 16px rgba(0,53,128,0.12); transform: translateY(-2px); }
+  .hotel-card.in-cart { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+
+  .hotel-img {
+    height: 100px; display: flex; align-items: center; justify-content: center;
+    font-size: 40px; position: relative;
+  }
+  .hotel-img-1 { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+  .hotel-img-2 { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+  .hotel-img-3 { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+
+  .h-badge {
+    position: absolute; top: 7px; left: 7px;
+    font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+  }
+  .h-badge.genius { background: var(--genius); color: var(--white); }
+  .h-badge.incart { background: var(--green); color: var(--white); }
+  .h-rating {
+    position: absolute; top: 7px; right: 7px;
+    background: rgba(0,0,0,0.6); color: var(--white);
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px;
+  }
+
+  .hotel-body { padding: 12px; }
+  .hotel-name { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+  .hotel-loc { font-size: 11px; color: var(--blue); margin-bottom: 4px; }
+  .hotel-pol { font-size: 10px; font-weight: 500; margin-bottom: 10px; }
+  .hotel-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+  .hotel-price-wrap .hotel-price-label { font-size: 9px; color: var(--text-sec); }
+  .hotel-price-wrap .hotel-price { font-size: 18px; font-weight: 800; }
+
+  .btn-atc {
+    padding: 7px 12px; border-radius: 6px; border: none;
+    font-weight: 700; font-size: 11px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s; white-space: nowrap;
+  }
+  .btn-atc.default { background: var(--blue); color: var(--white); }
+  .btn-atc.added { background: var(--green); color: var(--white); }
+  .btn-atc:hover { opacity: 0.88; }
+  .btn-atc:active { transform: scale(0.95); }
+
+  /* Toast */
+  .toast-wrap {
+    padding: 0 24px 14px; pointer-events: none;
+  }
+  .bk-toast {
+    background: #1a1a2e; border-radius: 8px;
+    padding: 10px 16px; display: flex; justify-content: space-between;
+    align-items: center;
+    opacity: 0; transform: translateY(8px);
+    transition: all 0.35s ease;
+  }
+  .bk-toast.show { opacity: 1; transform: translateY(0); }
+  .toast-msg { font-size: 13px; color: var(--white); }
+  .toast-cta { font-size: 12px; color: var(--yellow); font-weight: 700; cursor: pointer; pointer-events: all; }
+
+  /* ── CART PAGE ── */
+  .cp-header {
+    background: var(--navy); padding: 12px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cp-title { color: var(--white); font-weight: 700; font-size: 16px; }
+  .cp-actions { display: flex; gap: 8px; }
+  .cp-action-btn {
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 5px;
+    background: rgba(255,255,255,0.1); color: var(--white);
+    font-size: 11px; font-weight: 600; padding: 5px 12px;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .cp-action-btn:hover { background: rgba(255,255,255,0.2); }
+
+  .cp-timeline {
+    background: var(--blue-wash); padding: 10px 24px;
+    display: flex; align-items: center; gap: 0; overflow-x: auto;
+  }
+  .cp-city {
+    background: var(--blue); color: var(--white);
+    padding: 5px 16px; border-radius: 16px; font-size: 12px; font-weight: 600;
+    white-space: nowrap;
+  }
+  .cp-flight {
+    flex: 1; max-width: 60px; height: 2px; background: var(--blue);
+    position: relative;
+  }
+  .cp-flight::after {
+    content: '✈'; position: absolute;
+    top: -9px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; color: var(--blue);
+  }
+
+  .cp-hotel-row {
+    display: flex; gap: 16px; padding: 16px 24px;
+    border-bottom: 1px solid var(--border); align-items: flex-start;
+    background: var(--white); transition: background 0.15s;
+  }
+  .cp-hotel-row:hover { background: #fafbfc; }
+  .cp-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 12px; flex-shrink: 0; margin-top: 4px;
+  }
+  .cp-img {
+    width: 88px; height: 76px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px; flex-shrink: 0;
+  }
+  .cp-img-1 { background: linear-gradient(135deg,#dbeafe,#bfdbfe); }
+  .cp-img-2 { background: linear-gradient(135deg,#fce7f3,#fbcfe8); }
+  .cp-img-3 { background: linear-gradient(135deg,#d1fae5,#a7f3d0); }
+  .cp-info { flex: 1; }
+  .cp-hotel-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .genius-tag { background: var(--genius); color: var(--white); font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px; }
+  .cp-meta { font-size: 12px; color: var(--text-sec); margin-bottom: 3px; }
+  .cp-pol { font-size: 11px; font-weight: 600; margin-bottom: 10px; }
+  .cp-actions-row { display: flex; gap: 14px; }
+  .cp-link { font-size: 12px; font-weight: 600; cursor: pointer; }
+  .cp-link:hover { text-decoration: underline; }
+  .cp-price-col { text-align: right; flex-shrink: 0; }
+  .cp-nights { font-size: 11px; color: var(--text-sec); }
+  .cp-price { font-size: 20px; font-weight: 800; color: var(--navy); }
+  .cp-price-per { font-size: 11px; color: var(--text-sec); }
+
+  .cp-summary {
+    background: var(--yellow-wash); border-top: 1px solid #ffe082; padding: 20px 24px;
+  }
+  .cp-summary-title { font-weight: 700; font-size: 15px; margin-bottom: 14px; }
+  .cp-sum-row {
+    display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 7px;
+  }
+  .cp-sum-row.total {
+    font-weight: 800; font-size: 20px; color: var(--navy);
+    border-top: 2px solid var(--navy); padding-top: 12px; margin-top: 8px; margin-bottom: 0;
+  }
+  .btn-to-checkout {
+    width: 100%; padding: 14px; background: var(--blue); color: var(--white);
+    border: none; border-radius: 8px; font-weight: 700; font-size: 15px;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 16px;
+    transition: background 0.2s;
+  }
+  .btn-to-checkout:hover { background: var(--navy); }
+
+  /* ── CHECKOUT ── */
+  .ck-header {
+    background: var(--navy); padding: 12px 24px;
+    display: flex; justify-content: center; gap: 0; align-items: center;
+  }
+  .ck-step {
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 16px; border-radius: 18px;
+    font-size: 12px; font-weight: 700; transition: all 0.3s;
+  }
+  .ck-step.done { background: var(--green); color: var(--white); }
+  .ck-step.active { background: var(--yellow); color: var(--navy); }
+  .ck-step.idle { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+  .ck-connector { width: 36px; height: 2px; transition: background 0.3s; }
+  .ck-connector.done { background: var(--green); }
+  .ck-connector.idle { background: rgba(255,255,255,0.15); }
+  .ck-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(0,0,0,0.15); display: flex; align-items: center;
+    justify-content: center; font-size: 10px; flex-shrink: 0;
+  }
+
+  .ck-body { display: flex; min-height: 420px; }
+  .ck-main { flex: 1; padding: 22px 24px; overflow-y: auto; }
+  .ck-sidebar {
+    width: 256px; flex-shrink: 0; background: var(--bg);
+    border-left: 1px solid var(--border); padding: 18px;
+  }
+  .ck-sidebar-title { font-weight: 700; font-size: 14px; margin-bottom: 14px; }
+  .ck-si { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .ck-si-name { font-weight: 600; font-size: 12px; margin-bottom: 3px; }
+  .ck-si-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-sec); }
+  .ck-si-row span:last-child { font-weight: 600; color: var(--text); }
+  .ck-tot {
+    display: flex; justify-content: space-between;
+    font-weight: 800; font-size: 16px; color: var(--navy);
+    border-top: 2px solid var(--navy); padding-top: 10px; margin-top: 8px;
+  }
+
+  /* Step panels */
+  .ck-panel { display: none; }
+  .ck-panel.active { display: block; }
+  .ck-panel-title { font-weight: 700; font-size: 17px; margin-bottom: 16px; }
+
+  /* Same guest toggle */
+  .sg-toggle {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 16px; cursor: pointer;
+  }
+  .sg-box {
+    width: 18px; height: 18px; background: var(--blue); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white); font-size: 12px; flex-shrink: 0;
+  }
+  .sg-label { font-size: 13px; color: var(--blue); font-weight: 600; }
+
+  /* Hotel form block */
+  .hf-block {
+    background: var(--bg); border-radius: 10px; padding: 14px; margin-bottom: 10px;
+  }
+  .hf-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .hf-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--navy); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; flex-shrink: 0;
+  }
+  .hf-name { font-weight: 700; font-size: 13px; color: var(--navy); }
+  .hf-dates { font-size: 11px; color: var(--text-sec); margin-top: 1px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .form-row:last-child { margin-bottom: 0; }
+  .f-field label { font-size: 10px; font-weight: 600; color: var(--text-sec); display: block; margin-bottom: 4px; }
+  .f-field input {
+    width: 100%; border: 1px solid var(--border); border-radius: 5px;
+    padding: 9px 11px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: var(--white); transition: border-color 0.2s;
+  }
+  .f-field input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(0,113,194,0.12); }
+
+  /* Collapsed hotel rows */
+  .hf-collapsed {
+    background: var(--bg); border-radius: 10px; padding: 12px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .hf-collapsed-left { display: flex; align-items: center; gap: 10px; }
+  .hf-auto { font-size: 11px; color: var(--text-sec); }
+  .hf-edit { font-size: 12px; color: var(--blue); font-weight: 600; cursor: pointer; }
+
+  /* Payment */
+  .warning-box {
+    background: var(--yellow-wash); border-left: 4px solid var(--yellow);
+    border-radius: 8px; padding: 13px 16px; margin-bottom: 16px;
+    font-size: 13px; color: #795548; line-height: 1.65;
+  }
+  .pay-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .pay-tab {
+    padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    border: 1px solid var(--border); cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .pay-tab.active { border-color: var(--blue); background: var(--blue-wash); color: var(--blue); }
+  .f-full { margin-bottom: 10px; }
+  .f-full label { font-size: 10px; font-weight: 600; color: var(--text-sec); display: block; margin-bottom: 4px; }
+  .f-full input {
+    width: 100%; border: 1px solid var(--border); border-radius: 5px;
+    padding: 9px 12px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text);
+    transition: border-color 0.2s;
+  }
+  .f-full input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(0,113,194,0.12); }
+  .f-half { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+  .btn-pay {
+    width: 100%; padding: 14px; background: var(--green); color: var(--white);
+    border: none; border-radius: 8px; font-weight: 700; font-size: 15px;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 12px; transition: background 0.2s;
+  }
+  .btn-pay:hover { background: #005c07; }
+  .btn-cont {
+    padding: 12px 28px; background: var(--blue); color: var(--white);
+    border: none; border-radius: 7px; font-weight: 700; font-size: 14px;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 12px; transition: background 0.2s;
+  }
+  .btn-cont:hover { background: var(--navy); }
+
+  /* Confirmation */
+  .confirm-wrap { text-align: center; padding: 16px 0 8px; }
+  .confirm-icon-box {
+    width: 68px; height: 68px; border-radius: 18px;
+    background: var(--green-wash); margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+  }
+  .confirm-h { font-size: 26px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
+  .confirm-sub { font-size: 14px; color: var(--text-sec); margin-bottom: 24px; }
+  .itinerary {
+    background: var(--bg); border-radius: 10px; padding: 18px; text-align: left; margin-bottom: 18px;
+  }
+  .it-title { font-weight: 700; font-size: 15px; color: var(--navy); margin-bottom: 14px; }
+  .it-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 11px 0; border-bottom: 1px solid var(--border);
+  }
+  .it-row:last-of-type { border-bottom: none; }
+  .it-hotel { font-weight: 600; font-size: 13px; }
+  .it-dates { font-size: 11px; color: var(--text-sec); margin-top: 2px; }
+  .it-ref { font-size: 11px; color: var(--blue); font-weight: 600; }
+  .it-total {
+    display: flex; justify-content: space-between;
+    font-weight: 800; font-size: 17px; color: var(--navy);
+    border-top: 2px solid var(--navy); padding-top: 12px; margin-top: 8px;
+  }
+  .confirm-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .cbtn {
+    padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
+  }
+  .cbtn.primary { background: var(--blue); color: var(--white); border: none; }
+  .cbtn.outline { background: var(--white); color: var(--blue); border: 1px solid var(--blue); }
+  .cbtn:hover { opacity: 0.85; }
+
+  /* ── FLOATING CART SUMMARY ── */
+  .float-cart {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--navy); color: var(--white);
+    border-radius: 12px; padding: 14px 20px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 8px 32px rgba(0,53,128,0.3);
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.4s cubic-bezier(.34,1.56,.64,1);
+    z-index: 100; cursor: pointer;
+  }
+  .float-cart.visible { transform: translateY(0); opacity: 1; }
+  .float-cart:hover { background: #00254d; }
+  .float-cart-icon { font-size: 20px; position: relative; }
+  .float-badge {
+    position: absolute; top: -8px; right: -10px;
+    background: var(--yellow); color: var(--navy);
+    font-size: 9px; font-weight: 800; border-radius: 50%;
+    width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
+  }
+  .float-cart-info { line-height: 1.3; }
+  .float-cart-label { font-size: 11px; color: rgba(255,255,255,0.65); }
+  .float-cart-total { font-size: 17px; font-weight: 800; }
+  .float-cart-cta {
+    background: var(--yellow); color: var(--navy);
+    font-size: 12px; font-weight: 700; padding: 7px 14px;
+    border-radius: 6px; white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .hotel-grid { grid-template-columns: 1fr 1fr; }
+    .ck-sidebar { display: none; }
+    .demo-header-top { padding: 10px 16px; }
+    .step-tabs { padding: 0 16px; }
+    .demo-body { padding: 20px 14px 80px; }
+  }
+  @media (max-width: 520px) {
+    .hotel-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<header class="demo-header">
+  <div class="demo-header-top">
+    <div class="demo-brand">
+      <span class="demo-brand-logo">Booking.com</span>
+      <span class="demo-brand-pill">✦ Live Demo</span>
+    </div>
+    <span class="demo-header-right">Multi-Hotel Cart · Interactive Prototype</span>
+  </div>
+  <div class="step-tabs">
+    <button class="step-tab active" id="tab-search" onclick="switchPanel('search')">
+      <span class="tab-num" id="tnum-search">1</span> Search &amp; Add to Cart
+    </button>
+    <span class="tab-arrow">›</span>
+    <button class="step-tab" id="tab-cart" onclick="switchPanel('cart')">
+      <span class="tab-num" id="tnum-cart">2</span> Review Cart
+    </button>
+    <span class="tab-arrow">›</span>
+    <button class="step-tab" id="tab-checkout" onclick="switchPanel('checkout')">
+      <span class="tab-num" id="tnum-checkout">3</span> Checkout
+    </button>
+  </div>
+</header>
+
+<div class="demo-body">
+
+  <!-- ═══════════════ PANEL: SEARCH ═══════════════ -->
+  <div class="panel active" id="panel-search">
+    <div style="margin-bottom:16px;">
+      <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">Step 1 — Search Results</p>
+      <p style="font-size:13px;color:var(--text-sec);">Click <strong>"+ Add to Cart"</strong> on any hotel. Watch the cart badge update and the banner appear.</p>
+    </div>
+    <div class="screen-wrap">
+      <!-- Browser chrome -->
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot" style="background:#ff5f57;"></div>
+          <div class="browser-dot" style="background:#febc2e;"></div>
+          <div class="browser-dot" style="background:#28c840;"></div>
+        </div>
+        <div class="browser-url">booking.com/searchresults?dest=India&amp;checkin=2026-05-12&amp;checkout=2026-05-20</div>
+      </div>
+      <!-- Nav -->
+      <div class="bk-nav">
+        <span class="bk-logo">Booking.com</span>
+        <div class="bk-nav-right">
+          <span class="bk-nav-link">INR ▾</span>
+          <span class="bk-nav-link">Sign in</span>
+          <button class="bk-cart-btn" id="cart-nav-btn" onclick="switchPanel('cart')">
+            🛒 Cart
+            <span class="cart-count-badge" id="cart-badge">0</span>
+          </button>
+        </div>
+      </div>
+      <!-- Search bar -->
+      <div class="bk-search-bar">
+        <input class="bk-search-field" value="📍 India · Multi-city" readonly/>
+        <input class="bk-search-field" value="📅 12 May — 20 May 2026" readonly/>
+        <input class="bk-search-field" value="👤 2 adults · 0 children" readonly/>
+        <button class="bk-search-btn">Search</button>
+      </div>
+      <!-- Banner -->
+      <div class="bk-cart-banner" id="cart-banner">
+        <span class="banner-text" id="banner-text">🛒 0 hotels in cart</span>
+        <span class="banner-link" onclick="switchPanel('cart')">View Cart →</span>
+      </div>
+      <!-- Results -->
+      <div class="bk-results">
+        <div class="results-header">
+          <span class="results-count"><strong>247 properties</strong> found · India</span>
+          <span class="results-sort">Sort: Our top picks ▾</span>
+        </div>
+        <div class="hotel-grid">
+          <!-- Card 1 -->
+          <div class="hotel-card" id="hcard-0">
+            <div class="hotel-img hotel-img-1">
+              🏨
+              <div class="h-badge genius" id="gbadge-0">Genius</div>
+              <div class="h-rating">★ 8.9 · Superb</div>
+            </div>
+            <div class="hotel-body">
+              <div class="hotel-name">Grand Hyatt Mumbai</div>
+              <div class="hotel-loc">📍 Mumbai, Maharashtra</div>
+              <div class="hotel-pol" style="color:var(--green);">✓ Free cancellation · Breakfast</div>
+              <div class="hotel-bottom">
+                <div class="hotel-price-wrap">
+                  <div class="hotel-price-label">per night</div>
+                  <div class="hotel-price">₹8,500</div>
+                </div>
+                <button class="btn-atc default" id="atc-0" onclick="addHotel(0,'Grand Hyatt Mumbai','₹17,000')">+ Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="hotel-card" id="hcard-1">
+            <div class="hotel-img hotel-img-2">
+              🏰
+              <div class="h-rating">★ 9.2 · Exceptional</div>
+            </div>
+            <div class="hotel-body">
+              <div class="hotel-name">The Oberoi, Delhi</div>
+              <div class="hotel-loc">📍 New Delhi, Delhi</div>
+              <div class="hotel-pol" style="color:var(--red);">⚠ Non-refundable</div>
+              <div class="hotel-bottom">
+                <div class="hotel-price-wrap">
+                  <div class="hotel-price-label">per night</div>
+                  <div class="hotel-price">₹12,000</div>
+                </div>
+                <button class="btn-atc default" id="atc-1" onclick="addHotel(1,'The Oberoi Delhi','₹24,000')">+ Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="hotel-card" id="hcard-2">
+            <div class="hotel-img hotel-img-3">
+              🏛
+              <div class="h-badge genius" id="gbadge-2">Genius</div>
+              <div class="h-rating">★ 8.7 · Superb</div>
+            </div>
+            <div class="hotel-body">
+              <div class="hotel-name">ITC Grand Chola</div>
+              <div class="hotel-loc">📍 Chennai, Tamil Nadu</div>
+              <div class="hotel-pol" style="color:var(--green);">✓ Free cancellation · Breakfast</div>
+              <div class="hotel-bottom">
+                <div class="hotel-price-wrap">
+                  <div class="hotel-price-label">per night</div>
+                  <div class="hotel-price">₹9,200</div>
+                </div>
+                <button class="btn-atc default" id="atc-2" onclick="addHotel(2,'ITC Grand Chola','₹18,400')">+ Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Toast -->
+      <div class="toast-wrap">
+        <div class="bk-toast" id="bk-toast">
+          <span class="toast-msg" id="toast-msg">Hotel added ✓</span>
+          <span class="toast-cta" onclick="switchPanel('cart')">View Cart →</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:20px;text-align:right;">
+      <button onclick="switchPanel('cart')" style="padding:10px 24px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;">Next: Review Cart →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PANEL: CART ═══════════════ -->
+  <div class="panel" id="panel-cart">
+    <div style="margin-bottom:16px;">
+      <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">Step 2 — Cart Review</p>
+      <p style="font-size:13px;color:var(--text-sec);">Review all hotels with their itinerary, policies, and total cost before checking out.</p>
+    </div>
+    <div class="screen-wrap">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot" style="background:#ff5f57;"></div>
+          <div class="browser-dot" style="background:#febc2e;"></div>
+          <div class="browser-dot" style="background:#28c840;"></div>
+        </div>
+        <div class="browser-url">booking.com/cart</div>
+      </div>
+      <div class="cp-header">
+        <span class="cp-title">🛒 Your Trip Cart · 3 hotels</span>
+        <div class="cp-actions">
+          <button class="cp-action-btn">🔗 Share Cart</button>
+          <button class="cp-action-btn">⟺ Compare Hotels</button>
+        </div>
+      </div>
+      <div class="cp-timeline">
+        <div class="cp-city">Mumbai</div>
+        <div class="cp-flight"></div>
+        <div class="cp-city">New Delhi</div>
+        <div class="cp-flight"></div>
+        <div class="cp-city">Chennai</div>
+      </div>
+      <!-- Hotel 1 -->
+      <div class="cp-hotel-row">
+        <div class="cp-num">1</div>
+        <div class="cp-img cp-img-1">🏨</div>
+        <div class="cp-info">
+          <div class="cp-hotel-name">Grand Hyatt Mumbai <span class="genius-tag">Genius 10% off</span></div>
+          <div class="cp-meta">📅 Mon 12 May – Wed 14 May 2026</div>
+          <div class="cp-meta">🛏 Deluxe King Room · 👤 2 adults</div>
+          <div class="cp-pol" style="color:var(--green);">✓ Free cancellation before May 10</div>
+          <div class="cp-actions-row">
+            <span class="cp-link" style="color:var(--blue);">Edit dates</span>
+            <span class="cp-link" style="color:var(--red);">Remove</span>
+          </div>
+        </div>
+        <div class="cp-price-col">
+          <div class="cp-nights">2 nights</div>
+          <div class="cp-price">₹17,000</div>
+          <div class="cp-price-per">₹8,500 / night</div>
+        </div>
+      </div>
+      <!-- Hotel 2 -->
+      <div class="cp-hotel-row">
+        <div class="cp-num">2</div>
+        <div class="cp-img cp-img-2">🏰</div>
+        <div class="cp-info">
+          <div class="cp-hotel-name">The Oberoi, New Delhi</div>
+          <div class="cp-meta">📅 Thu 15 May – Sat 17 May 2026</div>
+          <div class="cp-meta">🛏 Premier Room · 👤 2 adults</div>
+          <div class="cp-pol" style="color:var(--red);">⚠ Non-refundable — ₹24,000 charged if cancelled</div>
+          <div class="cp-actions-row">
+            <span class="cp-link" style="color:var(--blue);">Edit dates</span>
+            <span class="cp-link" style="color:var(--red);">Remove</span>
+          </div>
+        </div>
+        <div class="cp-price-col">
+          <div class="cp-nights">2 nights</div>
+          <div class="cp-price">₹24,000</div>
+          <div class="cp-price-per">₹12,000 / night</div>
+        </div>
+      </div>
+      <!-- Hotel 3 -->
+      <div class="cp-hotel-row" style="border-bottom:none;">
+        <div class="cp-num">3</div>
+        <div class="cp-img cp-img-3">🏛</div>
+        <div class="cp-info">
+          <div class="cp-hotel-name">ITC Grand Chola <span class="genius-tag">Genius 10% off</span></div>
+          <div class="cp-meta">📅 Sun 18 May – Tue 20 May 2026</div>
+          <div class="cp-meta">🛏 Executive Club Room · 👤 2 adults, 1 child</div>
+          <div class="cp-pol" style="color:var(--green);">✓ Free cancellation before May 16</div>
+          <div class="cp-actions-row">
+            <span class="cp-link" style="color:var(--blue);">Edit dates</span>
+            <span class="cp-link" style="color:var(--red);">Remove</span>
+          </div>
+        </div>
+        <div class="cp-price-col">
+          <div class="cp-nights">2 nights</div>
+          <div class="cp-price">₹18,400</div>
+          <div class="cp-price-per">₹9,200 / night</div>
+        </div>
+      </div>
+      <!-- Summary -->
+      <div class="cp-summary">
+        <div class="cp-summary-title">Trip Cost Summary</div>
+        <div class="cp-sum-row"><span style="color:var(--text-sec);">Grand Hyatt Mumbai (2 nights)</span><span style="font-weight:600;">₹17,000</span></div>
+        <div class="cp-sum-row"><span style="color:var(--text-sec);">The Oberoi, Delhi (2 nights)</span><span style="font-weight:600;">₹24,000</span></div>
+        <div class="cp-sum-row"><span style="color:var(--text-sec);">ITC Grand Chola (2 nights)</span><span style="font-weight:600;">₹18,400</span></div>
+        <div class="cp-sum-row" style="padding-top:8px;border-top:1px solid #ffe082;margin-top:4px;"><span style="color:var(--text-sec);">Subtotal</span><span style="font-weight:600;">₹59,400</span></div>
+        <div class="cp-sum-row"><span style="color:var(--text-sec);">Taxes &amp; fees (18%)</span><span style="font-weight:600;">₹10,692</span></div>
+        <div class="cp-sum-row total"><span>Total</span><span>₹70,092</span></div>
+        <button class="btn-to-checkout" onclick="switchPanel('checkout')">Proceed to Checkout →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PANEL: CHECKOUT ═══════════════ -->
+  <div class="panel" id="panel-checkout">
+    <div style="margin-bottom:16px;">
+      <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">Step 3 — Unified Checkout</p>
+      <p style="font-size:13px;color:var(--text-sec);">Fill in guest details → payment → get confirmation. Click through all 3 steps.</p>
+    </div>
+    <div class="screen-wrap">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot" style="background:#ff5f57;"></div>
+          <div class="browser-dot" style="background:#febc2e;"></div>
+          <div class="browser-dot" style="background:#28c840;"></div>
+        </div>
+        <div class="browser-url">booking.com/checkout/multi</div>
+      </div>
+      <!-- Progress -->
+      <div class="ck-header">
+        <div class="ck-step active" id="cks1"><div class="ck-num" id="ckn1">1</div> Guest Details</div>
+        <div class="ck-connector idle" id="ckc1"></div>
+        <div class="ck-step idle" id="cks2"><div class="ck-num" id="ckn2">2</div> Payment</div>
+        <div class="ck-connector idle" id="ckc2"></div>
+        <div class="ck-step idle" id="cks3"><div class="ck-num" id="ckn3">3</div> Confirmation</div>
+      </div>
+      <div class="ck-body">
+        <div class="ck-main">
+          <!-- Step 1: Guest Details -->
+          <div class="ck-panel active" id="ckp1">
+            <div class="ck-panel-title">Guest Details</div>
+            <div class="sg-toggle">
+              <div class="sg-box">✓</div>
+              <span class="sg-label">Same guest for all hotels — auto-fills Hotels 2 &amp; 3</span>
+            </div>
+            <div class="hf-block">
+              <div class="hf-header">
+                <div class="hf-num">1</div>
+                <div><div class="hf-name">Grand Hyatt Mumbai</div><div class="hf-dates">May 12–14 · 2 nights</div></div>
+              </div>
+              <div class="form-row">
+                <div class="f-field"><label>First Name</label><input value="Rahul"/></div>
+                <div class="f-field"><label>Last Name</label><input value="Sharma"/></div>
+              </div>
+              <div class="form-row">
+                <div class="f-field"><label>Email</label><input value="rahul@email.com"/></div>
+                <div class="f-field"><label>Phone</label><input value="+91 98765 43210"/></div>
+              </div>
+              <div class="form-row" style="grid-template-columns:1fr;">
+                <div class="f-field"><label>Special Requests (optional)</label><input placeholder="e.g. Late check-in, extra pillows..."/></div>
+              </div>
+            </div>
+            <div class="hf-collapsed">
+              <div class="hf-collapsed-left">
+                <div class="hf-num">2</div>
+                <div><div class="hf-name">The Oberoi, Delhi</div><div class="hf-auto">May 15–17 · Auto-filled from above</div></div>
+              </div>
+              <span class="hf-edit">Edit ▾</span>
+            </div>
+            <div class="hf-collapsed">
+              <div class="hf-collapsed-left">
+                <div class="hf-num">3</div>
+                <div><div class="hf-name">ITC Grand Chola</div><div class="hf-auto">May 18–20 · Auto-filled from above</div></div>
+              </div>
+              <span class="hf-edit">Edit ▾</span>
+            </div>
+            <button class="btn-cont" onclick="goCkStep(2)">Continue to Payment →</button>
+          </div>
+          <!-- Step 2: Payment -->
+          <div class="ck-panel" id="ckp2">
+            <div class="ck-panel-title">Payment</div>
+            <div class="warning-box">
+              <strong>⚠ Mixed cancellation policies:</strong> 2 hotels have free cancellation. 1 hotel (The Oberoi, Delhi — ₹24,000) is non-refundable and will be charged immediately.
+            </div>
+            <div class="pay-tabs">
+              <button class="pay-tab active" onclick="setPayTab(this)">Credit/Debit Card</button>
+              <button class="pay-tab" onclick="setPayTab(this)">UPI</button>
+              <button class="pay-tab" onclick="setPayTab(this)">Net Banking</button>
+            </div>
+            <div class="f-full"><label>Card Number</label><input value="4242 4242 4242 4242"/></div>
+            <div class="f-half">
+              <div class="f-full" style="margin:0;"><label>Expiry</label><input value="09/28"/></div>
+              <div class="f-full" style="margin:0;"><label>CVV</label><input value="•••" type="password"/></div>
+            </div>
+            <div class="f-full"><label>Name on Card</label><input value="Rahul Sharma"/></div>
+            <div class="f-full"><label>Billing Address</label><input value="123 Koregaon Park, Pune — 411001"/></div>
+            <button class="btn-pay" onclick="goCkStep(3)">Complete Booking · ₹70,092 →</button>
+          </div>
+          <!-- Step 3: Confirmation -->
+          <div class="ck-panel" id="ckp3">
+            <div class="confirm-wrap">
+              <div class="confirm-icon-box">✓</div>
+              <div class="confirm-h">Booking Confirmed!</div>
+              <div class="confirm-sub">Confirmation sent to rahul@email.com</div>
+              <div class="itinerary">
+                <div class="it-title">🗺 Your Trip Itinerary</div>
+                <div class="it-row">
+                  <div><div class="it-hotel">Grand Hyatt Mumbai</div><div class="it-dates">📅 May 12–14 · 2 nights</div></div>
+                  <div class="it-ref">Ref: BK-78291034</div>
+                </div>
+                <div class="it-row">
+                  <div><div class="it-hotel">The Oberoi, Delhi</div><div class="it-dates">📅 May 15–17 · 2 nights</div></div>
+                  <div class="it-ref">Ref: BK-78291035</div>
+                </div>
+                <div class="it-row">
+                  <div><div class="it-hotel">ITC Grand Chola</div><div class="it-dates">📅 May 18–20 · 2 nights</div></div>
+                  <div class="it-ref">Ref: BK-78291036</div>
+                </div>
+                <div class="it-total"><span>Total Paid</span><span>₹70,092</span></div>
+              </div>
+              <div class="confirm-btns">
+                <button class="cbtn primary">📅 Add to Calendar</button>
+                <button class="cbtn outline">🔗 Share Itinerary</button>
+                <button class="cbtn outline">📄 Download Invoice</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Sidebar -->
+        <div class="ck-sidebar">
+          <div class="ck-sidebar-title">Order Summary</div>
+          <div class="ck-si"><div class="ck-si-name">Grand Hyatt Mumbai</div><div class="ck-si-row"><span>2 nights</span><span>₹17,000</span></div></div>
+          <div class="ck-si"><div class="ck-si-name">The Oberoi, Delhi</div><div class="ck-si-row"><span>2 nights</span><span>₹24,000</span></div></div>
+          <div class="ck-si"><div class="ck-si-name">ITC Grand Chola</div><div class="ck-si-row"><span>2 nights</span><span>₹18,400</span></div></div>
+          <div class="ck-si-row" style="margin-bottom:4px;"><span style="color:var(--text-sec);">Subtotal</span><span style="font-weight:600;">₹59,400</span></div>
+          <div class="ck-si-row"><span style="color:var(--text-sec);">Taxes</span><span style="font-weight:600;">₹10,692</span></div>
+          <div class="ck-tot"><span>Total</span><span>₹70,092</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FLOATING CART PILL -->
+<div class="float-cart" id="float-cart" onclick="switchPanel('cart')">
+  <div class="float-cart-icon">
+    🛒
+    <div class="float-badge" id="float-badge">0</div>
+  </div>
+  <div class="float-cart-info">
+    <div class="float-cart-label" id="float-label">hotels in cart</div>
+    <div class="float-cart-total" id="float-total">₹0</div>
+  </div>
+  <div class="float-cart-cta">View Cart →</div>
+</div>
+
+<script>
+  let cartCount = 0;
+  const totals = ['₹17,000', '₹41,000', '₹59,400'];
+
+  function addHotel(idx, name, price) {
+    const btn = document.getElementById('atc-' + idx);
+    const card = document.getElementById('hcard-' + idx);
+    if (btn.classList.contains('added')) return;
+
+    // Update button & card
+    btn.classList.replace('default', 'added');
+    btn.textContent = '✓ In Cart';
+    card.classList.add('in-cart');
+
+    // Replace genius badge with in-cart badge
+    const gb = document.getElementById('gbadge-' + idx);
+    if (gb) { gb.classList.remove('genius'); gb.classList.add('incart'); gb.textContent = '✓ In Cart'; }
+    else {
+      const imgDiv = card.querySelector('.hotel-img');
+      const ic = document.createElement('div');
+      ic.className = 'h-badge incart';
+      ic.textContent = '✓ In Cart';
+      imgDiv.appendChild(ic);
+    }
+
+    cartCount++;
+
+    // Badge
+    const badge = document.getElementById('cart-badge');
+    badge.textContent = cartCount;
+    badge.style.display = 'flex';
+    badge.classList.add('pop');
+    setTimeout(() => badge.classList.remove('pop'), 400);
+
+    // Banner
+    const banner = document.getElementById('cart-banner');
+    banner.classList.add('show');
+    document.getElementById('banner-text').textContent =
+      `🛒 ${cartCount} hotel${cartCount > 1 ? 's' : ''} in cart · Total: ${totals[cartCount - 1]}`;
+
+    // Toast
+    const toast = document.getElementById('bk-toast');
+    document.getElementById('toast-msg').textContent = `${name} added to cart ✓`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3200);
+
+    // Floating pill
+    const fp = document.getElementById('float-cart');
+    document.getElementById('float-badge').textContent = cartCount;
+    document.getElementById('float-label').textContent = `hotel${cartCount > 1 ? 's' : ''} in cart`;
+    document.getElementById('float-total').textContent = totals[cartCount - 1];
+    fp.classList.add('visible');
+  }
+
+  function switchPanel(which) {
+    ['search', 'cart', 'checkout'].forEach(p => {
+      document.getElementById('panel-' + p).classList.toggle('active', p === which);
+      document.getElementById('tab-' + p).classList.toggle('active', p === which);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Mark done tabs
+    const order = ['search', 'cart', 'checkout'];
+    const cur = order.indexOf(which);
+    order.forEach((p, i) => {
+      const tab = document.getElementById('tab-' + p);
+      const num = document.getElementById('tnum-' + p);
+      if (i < cur) {
+        tab.classList.add('done');
+        num.textContent = '✓';
+      } else if (i === cur) {
+        tab.classList.remove('done');
+        num.textContent = i + 1;
+      } else {
+        tab.classList.remove('done');
+        num.textContent = i + 1;
+      }
+    });
+  }
+
+  function goCkStep(n) {
+    // Update panels
+    [1, 2, 3].forEach(i => {
+      document.getElementById('ckp' + i).classList.toggle('active', i === n);
+    });
+    // Update step indicators
+    [1, 2, 3].forEach(i => {
+      const s = document.getElementById('cks' + i);
+      const nm = document.getElementById('ckn' + i);
+      if (i < n) { s.className = 'ck-step done'; nm.textContent = '✓'; }
+      else if (i === n) { s.className = 'ck-step active'; nm.textContent = i; }
+      else { s.className = 'ck-step idle'; nm.textContent = i; }
+    });
+    // Update connectors
+    [1, 2].forEach(i => {
+      document.getElementById('ckc' + i).className = 'ck-connector ' + (i < n ? 'done' : 'idle');
+    });
+  }
+
+  function setPayTab(el) {
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
