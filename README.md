@@ -16,7 +16,7 @@ This project redesigns the traditional hotel booking flow by introducing a scala
 
 ## 📄 UX Case Study PDF
 
-👉 [Download Full Case Study PDF](./Gautam_Chopada_Booking_Cart_Assignment.pdf)
+👉 [Download Full Case Study PDF](./booking-case-study.pdf.pdf)
 
 ---
 
