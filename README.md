@@ -1,3 +1,5 @@
+![Banner](./Banner.png)
+
 # Booking.com Multi-Hotel Cart UX Case Study
 
 A UX/product design case study exploring a unified multi-hotel booking experience for multi-city travelers, comparison shoppers, business travelers, and group trip organizers.
@@ -15,6 +17,7 @@ This project redesigns the traditional hotel booking flow by introducing a scala
 ## 📄 UX Case Study PDF
 
 👉 [View Full Case Study PDF](./Gautam%20Chopada_Booking_Cart_Assignment.pdf)
+
 ---
 
 # Overview
@@ -67,19 +70,42 @@ The solution introduces:
 # UX Strategy & Design Thinking
 
 ## 1. Frictionless Add-to-Cart Flow
+
 Users can add hotels directly from search results without interrupting browsing behavior.
 
+![Search Page](./Search%20Page.png)
+
+---
+
 ## 2. Unified Checkout System
+
 A single checkout flow reduces repetitive data entry and simplifies multi-stay booking experiences.
 
+![Checkout Page](./Checkout%20Page.png)
+
+---
+
 ## 3. Trip-Centric Experience
+
 The interface frames bookings as one connected journey instead of isolated hotel reservations.
 
+![Cart Page](./Cart%20Page.png)
+
+---
+
 ## 4. Trust Through Transparency
+
 Cancellation rules, price changes, and availability states are surfaced early to reduce uncertainty.
 
+![Payment Page](./Payment%20Page.png)
+
+---
+
 ## 5. Comparison-Driven Decision Making
+
 Users can shortlist and compare multiple hotels before committing to final bookings.
+
+![Cart Drawer](./Cart%20Drawer.png)
 
 ---
 
@@ -94,6 +120,30 @@ Users can shortlist and compare multiple hotels before committing to final booki
 
 ---
 
+# Mobile Experience
+
+The mobile experience preserves the same unified booking flow while adapting interactions for smaller screens and touch-first usability.
+
+---
+
+### Mobile Search Experience
+
+![Mobile Search](./mobile-search.png)
+
+---
+
+### Mobile Cart Experience
+
+![Mobile Cart](./mobile-cart.png)
+
+---
+
+### Mobile Confirmation Experience
+
+![Mobile Confirmation](./mobile-confirmation.png)
+
+---
+
 # Key Screens Designed
 
 - Search Results Experience
@@ -104,6 +154,14 @@ Users can shortlist and compare multiple hotels before committing to final booki
 - Payment Experience
 - Booking Confirmation
 - Mobile Responsive Screens
+
+---
+
+## Booking Confirmation Experience
+
+Users receive a unified booking confirmation experience for all selected stays, improving trip clarity and booking confidence.
+
+![Confirmation Page](./Confirmation%20Page.png)
 
 ---
 
