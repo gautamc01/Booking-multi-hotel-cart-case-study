@@ -13,7 +13,11 @@ This project redesigns the traditional hotel booking flow by introducing a scala
 👉 [View Interactive Prototype](https://gautamc01.github.io/Booking-multi-hotel-cart-case-study/)
 
 ---
+## Figma Prototype
 
+👉 [Explore Full Figma Prototype](https://www.figma.com/proto/31SQjY4g34zeOk25QHhz74/Booking.com?node-id=0-1&t=SaU69pwH28nZYhlX-1)
+
+---
 ## 📄 UX Case Study PDF
 
 👉 [Download Full Case Study PDF](./booking-case-study.pdf.pdf)
